@@ -1,0 +1,23 @@
+#cloud-config
+coreos:
+  units:
+  - name: docker.service
+    command: start
+  - name: docker-registry.service
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      Description=docker-registry
+      After=docker.service
+      Requires=docker.service
+
+      [Service]
+      ExecStartPre=/usr/bin/mkdir -p /var/data/registry
+      ExecStart=/usr/bin/docker run --name registry \
+                  -e MIRROR_SOURCE=https://registry-1.docker.io \
+                  -e MIRROR_SOURCE_INDEX=https://index.docker.io \
+                  -e STORAGE_PATH=/var/data/registry \
+                  -v /var/data/registry:/var/data/registry \
+                  registry
+      ExecStop=/usr/bin/docker stop registry
