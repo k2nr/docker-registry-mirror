@@ -19,5 +19,6 @@ coreos:
                   -e MIRROR_SOURCE_INDEX=https://index.docker.io \
                   -e STORAGE_PATH=/var/data/registry \
                   -v /var/data/registry:/var/data/registry \
+                  -p 5000:5000 \
                   registry
       ExecStop=/usr/bin/docker stop registry
